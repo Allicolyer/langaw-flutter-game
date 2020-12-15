@@ -15,7 +15,7 @@ class Fly {
   }
 
   void render(Canvas c) {
-    c.drawRect(flyRect, flyPaint);
+    c.drawRect(flyRect, flyPaint); // draw the fly on the canvas
   }
 
   void update(double t) {
@@ -26,7 +26,7 @@ class Fly {
     if (isDead) {
       flyRect = flyRect.translate(0, game.tileSize * 12 * t);
       if (flyRect.top > game.screenSize.height) {
-        // detect when the fly has fallen off the screen so that we can remove it from the game
+        // detect when the fly has fallen off the screen so that we can remove it from the game.
         isOffScreen = true;
       }
     }
