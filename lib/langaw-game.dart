@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/gestures.dart';
+import 'package:langaw/components/backyard.dart';
 import 'package:langaw/components/fly.dart';
 
 class LangawGame extends Game {
   // instance variables
   Size screenSize;
   double tileSize;
+  Backyard background;
   List<Fly> flies; // holds an array of fly instances
   Random rnd;
 
@@ -19,8 +21,11 @@ class LangawGame extends Game {
   void initialize() async {
     flies = List<Fly>();
     rnd = Random(); // initalize the random variable
-    resize(await Flame.util.initialDimensions()); // get the screen dimensions when the game starts up 
+    resize(await Flame.util
+        .initialDimensions()); // get the screen dimensions when the game starts up
     spawnFly();
+    background = Backyard(
+        this); // must be done after the screen size is determined because the constructor uses the screen size and tile size values.
   }
 
   void spawnFly() {
@@ -31,19 +36,19 @@ class LangawGame extends Game {
     // create a new fly, pass in the current game instance, and a random location
     flies.add(Fly(this, x, y));
   }
+
   // the render and update loops are part of the game loop, update is run first, then render.
   void render(Canvas canvas) {
-    Rect bgRect = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height); // LTWH - Left, top witdth height
-    Paint bgPaint = Paint();
-    bgPaint.color = Color(0xff576574);
-    canvas.drawRect(bgRect, bgPaint);
-
-    flies.forEach((Fly fly) => fly.render(canvas)); // run the render method on the fly, pass in the canvas
+    background.render(canvas); // render the background on the canvas
+    flies.forEach((Fly fly) => fly.render(
+        canvas)); // run the render method on the fly, pass in the canvas
   }
 
   void update(double t) {
-    flies.forEach((Fly fly) => fly.update(t)); // cycle through each fly, pass in the time delta
-    flies.removeWhere((Fly fly) => fly.isOffScreen); // remove off screen flies from the fly array
+    flies.forEach((Fly fly) =>
+        fly.update(t)); // cycle through each fly, pass in the time delta
+    flies.removeWhere((Fly fly) =>
+        fly.isOffScreen); // remove off screen flies from the fly array
   }
 
   void resize(Size size) {
