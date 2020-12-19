@@ -1,21 +1,28 @@
 import 'dart:ui';
 import 'package:langaw/langaw-game.dart';
+import 'package:flame/sprite.dart';
 
 class Fly {
   final LangawGame game;
   Rect flyRect;
-  Paint flyPaint;
+  List<Sprite> flyingSprite;
+  Sprite deadSprite;
+  double flyingSpriteIndex =
+      0; // This variable is a double because we will increment it using values from the time delta
   bool isDead = false;
   bool isOffScreen = false;
 
-  Fly(this.game, double x, double y) {
-    flyRect = Rect.fromLTWH(x, y, game.tileSize, game.tileSize);
-    flyPaint = Paint();
-    flyPaint.color = Color(0xff6ab04c);
-  }
+  Fly(this.game);
 
   void render(Canvas c) {
-    c.drawRect(flyRect, flyPaint); // draw the fly on the canvas
+    if (isDead) {
+      deadSprite.renderRect(
+          c,
+          flyRect.inflate(
+              2)); // the inflate method creates a copy of the rectangle it was called on but inflated by 2from the center.
+    } else {
+      flyingSprite[flyingSpriteIndex.toInt()].renderRect(c, flyRect.inflate(2));
+    }
   }
 
   void update(double t) {
@@ -29,11 +36,15 @@ class Fly {
         // detect when the fly has fallen off the screen so that we can remove it from the game.
         isOffScreen = true;
       }
+    } else {
+      flyingSpriteIndex += 30 * t;
+      if (flyingSpriteIndex >= 2) {
+        flyingSpriteIndex -= 2;
+      }
     }
   }
 
   void onTapDown() {
-    flyPaint.color = Color(0xffff4757); // turn the fly red when it is tapped
     isDead = true;
     game.spawnFly();
   }

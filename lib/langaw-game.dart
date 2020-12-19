@@ -5,6 +5,11 @@ import 'package:flame/flame.dart';
 import 'package:flutter/gestures.dart';
 import 'package:langaw/components/backyard.dart';
 import 'package:langaw/components/fly.dart';
+import 'package:langaw/components/house-fly.dart';
+import 'package:langaw/components/agile-fly.dart';
+import 'package:langaw/components/drooler-fly.dart';
+import 'package:langaw/components/hungry-fly.dart';
+import 'package:langaw/components/macho-fly.dart';
 
 class LangawGame extends Game {
   // instance variables
@@ -30,11 +35,27 @@ class LangawGame extends Game {
 
   void spawnFly() {
     // generate a random double between 0 and 1 and multiply the appropiate screen dimension by it
-    // subtract the tileSize so the fly doesn't appear halfway off the screen
-    double x = rnd.nextDouble() * (screenSize.width - tileSize);
-    double y = rnd.nextDouble() * (screenSize.height - tileSize);
+    // subtract the tileSize * the size of the largest fly so the fly doesn't appear halfway off the screen
+    double x = rnd.nextDouble() * (screenSize.width - (tileSize * 2.025));
+    double y = rnd.nextDouble() * (screenSize.height - (tileSize * 2.025));
     // create a new fly, pass in the current game instance, and a random location
-    flies.add(Fly(this, x, y));
+    switch (rnd.nextInt(5)) {
+      case 0:
+        flies.add(HouseFly(this, x, y));
+        break;
+      case 1:
+        flies.add(DroolerFly(this, x, y));
+        break;
+      case 2:
+        flies.add(AgileFly(this, x, y));
+        break;
+      case 3:
+        flies.add(MachoFly(this, x, y));
+        break;
+      case 4:
+        flies.add(HungryFly(this, x, y));
+        break;
+    }
   }
 
   // the render and update loops are part of the game loop, update is run first, then render.
